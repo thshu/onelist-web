@@ -3,7 +3,7 @@ name: release
 on:
   release:
     types: [ published ]
-    node-version: [ 19.9 ]
+    node-version: [ 20 ]
 jobs:
   release:
     strategy:
@@ -42,5 +42,5 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: build/compress/*
+          files: compress/*
   
