@@ -1,0 +1,46 @@
+name: release
+
+on:
+  release:
+    types: [ published ]
+    node-version: [ 19.9 ]
+jobs:
+  release:
+    strategy:
+      matrix:
+        platform: [ ubuntu-latest ]
+    name: Release
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: prerelease
+        uses: irongut/EditRelease@v1.2.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          id: ${{ github.event.release.id }}
+          prerelease: true
+      - name: Setup Node
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: install yarn
+        run: |
+          npm install -g yarn
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Build
+        run: |
+          bash build.sh
+      - name: prerelease
+        uses: irongut/EditRelease@v1.2.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          id: ${{ github.event.release.id }}
+          prerelease: false
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/compress/*
+  
