@@ -301,7 +301,7 @@ export default {
     },
     setup() {
         const loading = ref(true);
-        const rootSubtitle = ref(null);
+        const rootSubtitle = ref("");
         const is_ali_open = ref(false);
         const showModal = ref(false);
         const speed = ref(0);
@@ -378,7 +378,9 @@ export default {
                         art.switchUrl(item.url, item.html);
                         art.option.id = item.url.replaceAll(alist_host.value, "");
                         art.on('ready', () => {
-                            art.play();
+                            setTimeout(() => {
+                                art.play();
+                            }, 1000)
                             chunkSubtitles(item.url.replaceAll(alist_host.value, ""));
                         });
                     }
@@ -720,6 +722,9 @@ export default {
                         tooltip: `第${speed.value + 1}集`,
                         selector: urlList
                     });
+                    setTimeout(() => {
+                        art.play();
+                    }, 1000)
                 }
             }
         }
@@ -744,13 +749,13 @@ export default {
 
 
         function initArt() {
-            if (gallery_type.value == "tv") {
+                        if (gallery_type.value == "tv") {
                 var danmuku = `${proxy.COMMON.apiUrl}/v1/api/barrage/get?id=${id.value}&tv=${localStorage.getItem(season_id.value + "_tv")}&season_id=${season_id.value}&gallery_type=${gallery_type.value}`;
-            }
+                            }
             else {
                 var danmuku = `${proxy.COMMON.apiUrl}/v1/api/barrage/get?id=${id.value}&tv=${localStorage.getItem(id.value + "_tv")}&season_id=${season_id.value}&gallery_type=${gallery_type.value}`;
-            }
-
+                            }
+            
             var danmu_setting = window.localStorage.danmu_setting;
             if (danmu_setting == undefined) {
                 danmu_setting = JSON.stringify({
@@ -1158,7 +1163,10 @@ export default {
                 }
                 catch { }
                 if (if_play.value) {
-                    art.play();
+                    setTimeout(() => {
+                        art.play();
+                    }, 1000)
+
                 }
 
                 art.storage.name = 'artplayer_settings';
